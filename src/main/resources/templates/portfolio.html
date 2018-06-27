@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html lang="en"
+	  xmlns:th="http://wwww.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" 
+			  content="text/html; charset=UTF-8" />
+	    <meta name="viewport"
+	          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	    <meta name="description"
+	          content="A simple stock portfolio app">
+	    <meta name="author"
+	          content="Scott Hensen">
+	          
+		<title th:text="${portfolio.title}">Der Title</title>
+		<lnk rel="icon" th:href="@{/favicon.ico" />
+	</head>
+	
+	<body>
+		<p th:text="${portfolio.message}" />
+	</body>
+</html>
