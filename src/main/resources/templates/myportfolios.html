@@ -11,20 +11,27 @@
 	    <meta name="author"
 	          content="Scott Hensen">
 	          
-		<title th:text="${portfolio.title}">Der Title</title>
+		<title th:text="${myportfolios.title}">Der Title</title>
 		<link rel="icon" th:href="@{/favicon.ico}" />
 	</head>
 	
 	<body>
-		<p th:text="${portfolio.message}" />
+		<p th:text="${myportfolios.message}" />
+		<div th:each="portfolio : ${myportfolios.portfolios}">
+		<br />
+		<p th:text="${portfolio.portfolioName}" />
 		<table class="table table-striped table-sm">
 			<thead>
 				<tr>
-					<th th:each="header : ${portfolio.tableHeaders}" 
+					<th th:each="header : ${myportfolios.tableHeaders}" 
 						th:text="${header}"></th>
 				</tr>
 			</thead>
 			<tbody>
+				<tr>
+					<td>+</td>
+					<td>enter</td>
+				</tr>
 				<tr th:each="security : ${portfolio.securities}">
 					<th th:text="${security.deleteInd}"  ></th>
 					<th th:text="${security.symbol}"     ></th>
@@ -35,5 +42,6 @@
 				</tr>
 			</tbody>
 		</table>
+		</div>
 	</body>
 </html>
