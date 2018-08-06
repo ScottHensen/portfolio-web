@@ -12,6 +12,7 @@ import com.scotthensen.portfolio.model.Security;
 import com.scotthensen.portfolio.viewmodel.MyPortfoliosViewModel;
 import com.scotthensen.portfolio.viewmodel.PortfolioViewModel;
 import com.scotthensen.portfolio.viewmodel.SecurityViewModel;
+import com.scotthensen.portfolio.viewmodel.form.AddSymbolForm;
 
 @Component
 public class ViewModelMapper {
@@ -25,14 +26,33 @@ public class ViewModelMapper {
 									MyPortfoliosViewModel viewModel, 
 									List<Portfolio> portfolios) 
 	{
-		viewModel.setTitle("Portfolios");
-		viewModel.setMessage("My Portfolios");
-		viewModel.setTableHeaders(buildPortfolioHeaders());
-		viewModel.setPortfolios(mapPortfoliosToPortfolioViewModelList(
-									viewModel.getPortfolios(), 
-									portfolios));
-		
-		return viewModel;
+	viewModel.setTitle("Portfolios");
+	viewModel.setMessage("My Portfolios");
+	viewModel.setClientId(1);	//TODO: fix this
+	viewModel.setAddSymbolForm(new AddSymbolForm());
+	viewModel.setTableHeaders(buildPortfolioHeaders());
+	viewModel.setPortfolios(mapPortfoliosToPortfolioViewModelList(
+				viewModel.getPortfolios(), 
+				portfolios));
+	
+	return viewModel;
+	}
+	
+	public MyPortfoliosViewModel buildMyPortfoliosViewModel(
+									MyPortfoliosViewModel viewModel, 
+									List<Portfolio> portfolios,
+									AddSymbolForm form) 
+	{
+	viewModel.setTitle("Portfolios");
+	viewModel.setMessage("My Portfolios");
+	viewModel.setClientId(1);	//TODO: fix this
+	viewModel.setAddSymbolForm(form);
+	viewModel.setTableHeaders(buildPortfolioHeaders());
+	viewModel.setPortfolios(mapPortfoliosToPortfolioViewModelList(
+				viewModel.getPortfolios(), 
+				portfolios));
+	
+	return viewModel;
 	}
 
 	private List<String> buildPortfolioHeaders() 
@@ -65,6 +85,7 @@ public class ViewModelMapper {
 	{
 		PortfolioViewModel portfolioViewModel = new PortfolioViewModel();
 		
+		portfolioViewModel.setPortfolioId(p.getId());
 		portfolioViewModel.setPortfolioName(p.getName());
 		portfolioViewModel.setSecurities(mapSecuritiesToSecurityViewModelList(
 											portfolioViewModel.getSecurities(), 

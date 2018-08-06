@@ -11,26 +11,46 @@
 	    <meta name="author"
 	          content="Scott Hensen">
 	          
-		<title th:text="${myportfolios.title}">Der Title</title>
-		<link rel="icon" th:href="@{/favicon.ico}" />
+		<title th:text="${originalViewModel.title}">Der Title</title>
+		
+		<link rel="icon" 
+			  th:href="@{/favicon.ico}" />
+		<link rel="stylesheet" 
+			  th:href="@{/css/myportfolios.css}">
 	</head>
 	
 	<body>
-		<p th:text="${myportfolios.message}" />
-		<div th:each="portfolio : ${myportfolios.portfolios}">
+		<p th:text="${originalViewModel.message}" />
+		<div th:each="portfolio : ${originalViewModel.portfolios}">
 		<br />
 		<p th:text="${portfolio.portfolioName}" />
 		<table class="table table-striped table-sm">
 			<thead>
 				<tr>
-					<th th:each="header : ${myportfolios.tableHeaders}" 
+					<th th:each="header : ${originalViewModel.tableHeaders}" 
 						th:text="${header}"></th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td>+</td>
-					<td>enter</td>
+				<div id="addSymbolForm" th:with="messageStyle=${originalViewModel.addSymbolForm.messageStyle}">
+					<form id="addSymbolForm" action='#' 					
+									 		 th:action="@{/portfolios/{clientId}(clientId=${originalViewModel.clientId})}"
+ 											 th:object="${originalViewModel}"
+									 		 method="post">
+
+						<input type="submit" value="+" />
+						
+						<input type="text"   th:name="addSymbolForm.symbol"      
+										     th:field="*{addSymbolForm.symbol}"/>
+										     
+						<label class="label" th:attrappend="class=${'-' + messageStyle}"
+							   				 th:text="*{addSymbolForm.message}?: ' ' "  ></label>
+										     
+						<input type="hidden" name="addSymbolForm.portfolioId"
+											 th:value="${portfolio.portfolioId}" />
+					</form>
+				</div>
 				</tr>
 				<tr th:each="security : ${portfolio.securities}">
 					<th th:text="${security.deleteInd}"  ></th>
