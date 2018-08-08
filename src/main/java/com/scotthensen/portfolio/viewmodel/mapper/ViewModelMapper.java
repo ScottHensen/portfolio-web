@@ -24,7 +24,8 @@ public class ViewModelMapper {
 	
 	public MyPortfoliosViewModel buildMyPortfoliosViewModel(
 									MyPortfoliosViewModel viewModel, 
-									List<Portfolio> portfolios) 
+									List<Portfolio> portfolios,
+									AddSymbolForm form) 
 	{
 	viewModel.setTitle("Portfolios");
 	viewModel.setMessage("My Portfolios");
@@ -33,7 +34,8 @@ public class ViewModelMapper {
 	viewModel.setTableHeaders(buildPortfolioHeaders());
 	viewModel.setPortfolios(mapPortfoliosToPortfolioViewModelList(
 				viewModel.getPortfolios(), 
-				portfolios));
+				portfolios,
+				form));
 	
 	return viewModel;
 	}
@@ -41,16 +43,25 @@ public class ViewModelMapper {
 	public MyPortfoliosViewModel buildMyPortfoliosViewModel(
 									MyPortfoliosViewModel viewModel, 
 									List<Portfolio> portfolios,
-									AddSymbolForm form) 
+									AddSymbolForm form,
+									MyPortfoliosViewModel originalViewModel) //client id instead?
 	{
+	Portfolio modifiedPortfolio = 
+			portfolios
+				.stream()
+				.filter(p -> p.getId().equals(form.getPortfolioId()))
+				.findAny()
+				.orElse(null);
+
 	viewModel.setTitle("Portfolios");
 	viewModel.setMessage("My Portfolios");
-	viewModel.setClientId(1);	//TODO: fix this
-	viewModel.setAddSymbolForm(form);
+	viewModel.setClientId(originalViewModel.getClientId());	
+	viewModel.setAddSymbolForm(new AddSymbolForm());  //make this default
 	viewModel.setTableHeaders(buildPortfolioHeaders());
 	viewModel.setPortfolios(mapPortfoliosToPortfolioViewModelList(
 				viewModel.getPortfolios(), 
-				portfolios));
+				portfolios,
+				form));
 	
 	return viewModel;
 	}
@@ -71,13 +82,29 @@ public class ViewModelMapper {
 
 	private List<PortfolioViewModel> mapPortfoliosToPortfolioViewModelList(
 										List<PortfolioViewModel> portfolioViewModelList, 
-										List<Portfolio> portfolios) 
+										List<Portfolio> portfolios,
+										AddSymbolForm form) 
 	{
-		portfolioViewModelList = 
-				portfolios.stream()
-						  .map(p -> mapPortfolioToViewModel(p))
-						  .collect(Collectors.toList());
-				
+		Portfolio modifiedPortfolio = 
+				portfolios
+					.stream()
+					.filter(p -> p.getId().equals(form.getPortfolioId()))
+					.findAny()
+					.orElse(null);
+		
+		if (modifiedPortfolio == null) {
+			portfolioViewModelList = 
+					portfolios.stream()
+							  .map(p -> mapPortfolioToViewModel(p))
+							  .collect(Collectors.toList());
+		}
+		else {
+			portfolioViewModelList = 
+					portfolios.stream()
+					  .map(p -> mapPortfolioToViewModel(p, modifiedPortfolio, form))
+					  .collect(Collectors.toList());
+					
+		}
 		return portfolioViewModelList;
 	}
 
@@ -87,6 +114,28 @@ public class ViewModelMapper {
 		
 		portfolioViewModel.setPortfolioId(p.getId());
 		portfolioViewModel.setPortfolioName(p.getName());
+		portfolioViewModel.setAddSymbolForm(new AddSymbolForm());
+		portfolioViewModel.setSecurities(mapSecuritiesToSecurityViewModelList(
+											portfolioViewModel.getSecurities(), 
+											p.getSecurities()));
+		
+		return portfolioViewModel;
+	}
+	
+	private PortfolioViewModel mapPortfolioToViewModel(Portfolio p, Portfolio mp, AddSymbolForm form) 
+	{
+		PortfolioViewModel portfolioViewModel = new PortfolioViewModel();
+		
+		portfolioViewModel.setPortfolioId(p.getId());
+		portfolioViewModel.setPortfolioName(p.getName());
+//left off here... null pointer on initial load
+		if (p.getId().equals(mp.getId())) {
+			portfolioViewModel.setAddSymbolForm(form);
+		}
+		else {
+			portfolioViewModel.setAddSymbolForm(new AddSymbolForm());
+			
+		}
 		portfolioViewModel.setSecurities(mapSecuritiesToSecurityViewModelList(
 											portfolioViewModel.getSecurities(), 
 											p.getSecurities()));

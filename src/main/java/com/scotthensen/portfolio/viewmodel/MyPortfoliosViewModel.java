@@ -21,5 +21,5 @@ public class MyPortfoliosViewModel
 	private Integer        clientId;
 	private List<String>   tableHeaders;
 	private List<PortfolioViewModel> portfolios;
-	private AddSymbolForm  addSymbolForm;
+	private AddSymbolForm  addSymbolForm;   
 }

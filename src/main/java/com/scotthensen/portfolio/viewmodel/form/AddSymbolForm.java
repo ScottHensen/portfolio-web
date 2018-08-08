@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 @Component
 @Data
-//@NoArgsConstructor
 @AllArgsConstructor
 
 public class AddSymbolForm 

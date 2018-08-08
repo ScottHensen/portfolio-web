@@ -1,6 +1,5 @@
 package com.scotthensen.portfolio.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,11 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.scotthensen.portfolio.model.Portfolio;
-import com.scotthensen.portfolio.model.Security;
 import com.scotthensen.portfolio.persistence.portfolio.repository.PortfolioRepository;
 import com.scotthensen.portfolio.service.PortfolioService;
 import com.scotthensen.portfolio.service.PortfolioServiceResponse;
-import com.scotthensen.portfolio.viewmodel.MyPortfoliosIOViewModel;
 import com.scotthensen.portfolio.viewmodel.MyPortfoliosViewModel;
 import com.scotthensen.portfolio.viewmodel.form.AddSymbolForm;
 import com.scotthensen.portfolio.viewmodel.mapper.ViewModelMapper;
@@ -45,53 +42,32 @@ public class PortfolioController
 		log.debug("portfolios=" + portfolios);
 		
 		MyPortfoliosViewModel viewModel = new MyPortfoliosViewModel();
-		viewModel = viewModelMapper.buildMyPortfoliosViewModel(viewModel, portfolios);
-		
-//		MyPortfoliosIOViewModel ioViewModel = new MyPortfoliosIOViewModel();
-//		ioViewModel.setOriginalViewModel(viewModel);
+		viewModel = viewModelMapper.buildMyPortfoliosViewModel(viewModel, portfolios, new AddSymbolForm());
 		
 		model.addAttribute("originalViewModel", viewModel);
 		log.debug("model="+model);
 		return "myportfolios";
 	}
 	
-//	@GetMapping("/portfolios/{clientId}")
-//	public String showPortfoliosForClientId(Model model, @PathVariable String clientId) 
-//	{
-//		List<Portfolio> portfolios = portfolioSvc.getClientPortfolios(new Integer(clientId));
-//		log.debug("portfolios=" + portfolios);
-//		
-//		MyPortfoliosViewModel viewModel = new MyPortfoliosViewModel();
-//		viewModel = viewModelMapper.buildMyPortfoliosViewModel(viewModel, portfolios);
-//		
-//		model.addAttribute("viewModel", viewModel);
-//		//model.addAttribute("addSymbolForm", new AddSymbolForm());
-//		return "myportfolios";
-//	}
-//	
 	@PostMapping("/portfolios/{clientId}")
 	public String handleMyPortfoliosForClientFormSubmit(
 														@PathVariable String clientId,
-//														@ModelAttribute MyPortfoliosIOViewModel ioViewModel,
 														@ModelAttribute MyPortfoliosViewModel originalViewModel,
 														BindingResult errors,
 														Model model)
 	{
 		log.debug("  model=" + model.toString());
-//		log.debug("oimodel=" + ioViewModel.toString());
 		log.debug("ogmodel=" + originalViewModel.toString());
-//		MyPortfoliosViewModel vm = new MyPortfoliosViewModel();
 
-//		MyPortfoliosViewModel viewModel = ioViewModel.getUpdatedViewModel();
 		MyPortfoliosViewModel viewModel = originalViewModel;
-		AddSymbolForm addSymbolForm = viewModel.getAddSymbolForm();
+		AddSymbolForm addSymbolForm = viewModel.getAddSymbolForm();  
 		
-		Optional<Portfolio> portfolio = 
+		Optional<Portfolio> portfolio = 							
 				portfolioSvc.getPortfolio(viewModel.getAddSymbolForm().getPortfolioId());
 
 		if (portfolio.isPresent()) 
 		{
-			PortfolioServiceResponse portfolioSvcResponse = 
+			PortfolioServiceResponse portfolioSvcResponse = 		// and this
 				portfolioSvc.getSecurity(viewModel.getAddSymbolForm().getSymbol());
 			
 			if (portfolioSvcResponse.isSuccess()) 
@@ -112,10 +88,11 @@ public class PortfolioController
 		List<Portfolio> portfolios = portfolioSvc.getClientPortfolios(new Integer(clientId));
 		log.debug("updated portfolios=" + portfolios);
 		
-//		MyPortfoliosViewModel viewModel = new MyPortfoliosViewModel();
-		viewModel = viewModelMapper.buildMyPortfoliosViewModel(viewModel, portfolios, addSymbolForm);
-//		viewModel.setAddSymbolForm(addSymbolForm);
+		viewModel = viewModelMapper.buildMyPortfoliosViewModel(viewModel, portfolios, addSymbolForm, originalViewModel);
+
 		model.addAttribute("originalViewModel", viewModel);
+		log.debug("updated viewModel=" + viewModel);
+
 		return "myportfolios";
 	}
 
