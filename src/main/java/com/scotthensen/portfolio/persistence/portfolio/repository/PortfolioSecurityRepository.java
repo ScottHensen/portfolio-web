@@ -10,7 +10,7 @@ import com.scotthensen.portfolio.persistence.portfolio.entity.PortfolioSecurityE
 @Repository
 public interface PortfolioSecurityRepository extends JpaRepository<PortfolioSecurityEntity, Integer> 
 {
-	List<PortfolioSecurityEntity> findByPortfolioId(Integer portfolioId);
-
-	List<PortfolioSecurityEntity> findSecuritiesByPortfolioId(Integer portfolioId);
+//	List<PortfolioSecurityEntity> findByPortfolioId(Integer portfolioId);
+//
+//	List<PortfolioSecurityEntity> findSecuritiesByPortfolioId(Integer portfolioId);
 }

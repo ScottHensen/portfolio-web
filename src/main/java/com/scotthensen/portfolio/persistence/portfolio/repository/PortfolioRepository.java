@@ -1,8 +1,11 @@
 package com.scotthensen.portfolio.persistence.portfolio.repository;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.scotthensen.portfolio.persistence.portfolio.entity.PortfolioEntity;
@@ -10,7 +13,10 @@ import com.scotthensen.portfolio.persistence.portfolio.entity.PortfolioEntity;
 @Repository
 public interface PortfolioRepository extends JpaRepository<PortfolioEntity, Integer> 
 {
-	List<PortfolioEntity> findPortfoliosById(Integer portfolioId);
+	List<PortfolioEntity> findPortfoliosByPortfolioId(Integer portfolioId);
 	
-	List<PortfolioEntity> findPortfoliosByClientId(Integer clientId);
+	List<PortfolioEntity> findByClientId(Integer clientId);
+
+	@Query("select p from PortfolioEntity p left join p.securities s where p.clientId = :clientId")
+	Set<PortfolioEntity> getFooByClientId(@Param("clientId") Integer clientId);
 }

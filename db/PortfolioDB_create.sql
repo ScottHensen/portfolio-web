@@ -2,7 +2,7 @@ DROP DATABASE `portfolio`;
 --
 CREATE DATABASE `portfolio` /*!40100 DEFAULT CHARACTER SET utf8 */;
 --
-CREATE TABLE `portfolio`.`portfolios` (
+CREATE TABLE `portfolio`.`portfolio` (
   `portfolio_id`     int(11)     NOT NULL AUTO_INCREMENT 
                                  COMMENT 'Unique ID (internal) for this portfolio',
   `portfolio_name`   varchar(45) NOT NULL 
@@ -24,8 +24,8 @@ CREATE TABLE `portfolio`.`portfolios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 
   COMMENT='Portfolios held or tracked by clients	'
   ;
-CREATE TABLE `portfolio`.`portfolio_securities` (
-  `id`               int(11)     NOT NULL AUTO_INCREMENT 
+CREATE TABLE `portfolio`.`security` (
+  `security_id`      int(11)     NOT NULL AUTO_INCREMENT 
                                  COMMENT 'Unique ID (internal) for this portfolio security',
   `portfolio_id`     int(11)     NOT NULL  
                                  COMMENT 'Unique ID (internal) for a portfolio',
@@ -43,13 +43,15 @@ CREATE TABLE `portfolio`.`portfolio_securities` (
                                  COMMENT 'Timestamp applied each time this row is revised',
   `revision_user_id` int(11)      
                                  COMMENT 'Unique ID (internal) for the user who created this row',
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `ix_portfolio_symbol` (`portfolio_id` ASC, `security_symbol` ASC),
+  PRIMARY KEY (`security_id`),
+--  FOREIGN KEY (`portfolio_id`) 
+--  REFERENCES   `portfolio`.`portfolio` (`portfolio_id`)
+--  UNIQUE INDEX `ix_portfolio_symbol` (`portfolio_id` ASC, `security_symbol` ASC),
   CONSTRAINT     `fk_portfolio_id` 
     FOREIGN KEY (`portfolio_id`) 
-    REFERENCES   `portfolio`.`portfolios` (`portfolio_id`) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION
+    REFERENCES   `portfolio`.`portfolio` (`portfolio_id`) 
+--    ON DELETE CASCADE 
+--    ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 
   COMMENT='Securities held in a portfolio'
   ;

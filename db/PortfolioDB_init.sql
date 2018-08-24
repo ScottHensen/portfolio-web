@@ -1,4 +1,4 @@
-INSERT into portfolio.portfolios
+INSERT into portfolio.portfolio
 (
 	 portfolio_name
 	,client_id
@@ -18,7 +18,7 @@ values
 	,null
 	,null
 );
-INSERT into portfolio.portfolios
+INSERT into portfolio.portfolio
 (
 	 portfolio_name
 	,client_id
@@ -38,7 +38,7 @@ values
 	,null
 	,null
 );
-INSERT into portfolio.portfolio_securities 
+INSERT into portfolio.security 
 (	 portfolio_id
 	,security_symbol
     ,security_name
@@ -58,7 +58,7 @@ values
 	,null
 	,null
 );
-INSERT into portfolio.portfolio_securities 
+INSERT into portfolio.security 
 (	 portfolio_id
 	,security_symbol
     ,security_name
@@ -78,7 +78,7 @@ values
 	,null
 	,null
 );
-INSERT into portfolio.portfolio_securities 
+INSERT into portfolio.security 
 (	 portfolio_id
 	,security_symbol
     ,security_name
@@ -98,7 +98,7 @@ values
 	,null
 	,null
 );
-INSERT into portfolio.portfolio_securities 
+INSERT into portfolio.security 
 (	 portfolio_id
 	,security_symbol
     ,security_name

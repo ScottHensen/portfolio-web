@@ -1,11 +1,14 @@
 package com.scotthensen.portfolio.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.scotthensen.portfolio.model.Portfolio;
 import com.scotthensen.portfolio.model.Security;
@@ -14,7 +17,11 @@ import com.scotthensen.portfolio.persistence.portfolio.entity.PortfolioSecurityE
 import com.scotthensen.portfolio.persistence.portfolio.repository.PortfolioRepository;
 import com.scotthensen.portfolio.persistence.portfolio.repository.PortfolioSecurityRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
+@Transactional("portfolioTransactionManager")
 public class PortfolioService {
 
 	@Autowired
@@ -26,28 +33,20 @@ public class PortfolioService {
 	@Autowired
 	SecurityService securitySvc;
 	
-	
 	public List<Portfolio> getClientPortfolios(Integer clientId)
 	{
-		List<PortfolioEntity> portfolioEntities = 
-				portfolioRepo.findPortfoliosByClientId(clientId);
-		
+		Set<PortfolioEntity> portfolioEntities = 
+				portfolioRepo.getFooByClientId(clientId);
+
+		log.debug("portfolioEntites=" + portfolioEntities);
+
 		return portfolioEntities
 					.stream()
 					.map(p -> portfolioEntityToModelMapper(p))
+					.peek(p -> log.debug("portfolioMapper: " + p.getName()))
 					.collect(Collectors.toList());
 	}
 
-	public List<Security> getSecuritiesHeldInPortfolio(Integer portfolioId)
-	{
-		List<PortfolioSecurityEntity> portfolioSecurityEntities = 
-				portfolioSecurityRepo.findSecuritiesByPortfolioId(portfolioId);
-		
-		return portfolioSecurityEntities
-					.stream()
-					.map(s -> portfolioSecurityEntityToModelMapper(s))
-					.collect(Collectors.toList());
-	}
 	
 	//TODO: make this optional
 	public PortfolioServiceResponse getSecurity(String symbol) 
@@ -75,14 +74,36 @@ public class PortfolioService {
 
 	public void addSecurityToPortfolio(Portfolio portfolio, Security security) 
 	{
-		PortfolioEntity portfolioEntity = portfolioModelToEntityMapper(portfolio);
-		portfolioEntity.setCreationUserId(portfolio.getClientId());
-
-		PortfolioSecurityEntity portfolioSecurityEntity = portfolioSecurityModelToEntityMapper(security);
-		portfolioSecurityEntity.setPortfolio(portfolioEntity);
-		portfolioSecurityEntity.setCreationUserId(portfolio.getClientId());
+		//TODO:  I'm doing this wrong.
+		//       I need to do portfolioEntity.addSecurity, then saveandflush the PORTFOLIO.
+		//       probably need to add list<security> to portfolio entity and rework the relationship annotations
+		//       remember, these objects map relationships; they do not have to match db implementation
+		log.debug("addSecurity...portfolio=" + portfolio);
+		log.debug("addSecurity...security =" + security);
 		
-		portfolioSecurityRepo.saveAndFlush(portfolioSecurityEntity);
+		PortfolioSecurityEntity portfolioSecurityEntity = portfolioSecurityModelToEntityMapper(security);
+		
+//		PortfolioEntity portfolioEntity = portfolioModelToEntityMapper(portfolio);
+//		portfolioEntity.getSecurities().add(portfolioSecurityEntity);
+//		
+//		portfolioRepo.save(portfolioEntity);
+		
+		
+		
+		
+		
+		
+		
+//		portfolioRepo.saveAndFlush(portfolioEntity);
+		
+//		PortfolioEntity portfolioEntity = portfolioModelToEntityMapper(portfolio);
+//		portfolioEntity.setCreationUserId(portfolio.getClientId());
+//		
+//		PortfolioSecurityEntity portfolioSecurityEntity = portfolioSecurityModelToEntityMapper(security);
+//		portfolioSecurityEntity.setPortfolio(portfolioEntity);
+//		portfolioSecurityEntity.setCreationUserId(portfolio.getClientId());
+//		
+//		portfolioSecurityRepo.saveAndFlush(portfolioSecurityEntity);
 	}
 
 	public Optional<Portfolio> getPortfolio(Integer portfolioId) 
@@ -90,12 +111,6 @@ public class PortfolioService {
 		Optional<PortfolioEntity> portfolioEntity = portfolioRepo.findById(portfolioId);
 		
 		return Optional.ofNullable(portfolioEntityToModelMapper(portfolioEntity.get()));
-//		if (portfolioEntity.isPresent()) {
-//			return portfolioEntityToModelMapper(portfolioEntity.get());			
-//		}
-//		else {
-//			return Optional.empty();
-//		}
 	}
 	
 	
@@ -103,18 +118,22 @@ public class PortfolioService {
 	{
 		return Portfolio
 					.builder()
-					.id(p.getId())
+					.id(p.getPortfolioId())
 					.name(p.getName())
 					.clientId(p.getClientId())
 					.avatarId(p.getAvatarId())
-					.securities(getSecuritiesHeldInPortfolio(p.getId()))
+					.securities(p.getSecurities()
+									.stream()
+									.map(s -> portfolioSecurityEntityToModelMapper(s))
+									.peek(s -> log.debug("securityMapper: " + s.getSymbol()))
+									.collect(Collectors.toList()))
 					.build();
 	}
 	
 	private PortfolioEntity portfolioModelToEntityMapper(Portfolio p) 
 	{
 		PortfolioEntity portfolioEntity = new PortfolioEntity();
-		portfolioEntity.setId(p.getId());
+		portfolioEntity.setPortfolioId(p.getId());
 		portfolioEntity.setAvatarId(p.getAvatarId());
 		portfolioEntity.setClientId(p.getClientId());
 		portfolioEntity.setName(p.getName());
@@ -125,7 +144,7 @@ public class PortfolioService {
 	{
 		return Security
 					.builder()
-					.id(s.getId())
+					.id(s.getSecurityId())
 					.sector(s.getSector())
 					.securityName(s.getSecurityName())
 					.symbol(s.getSymbol())
@@ -135,7 +154,7 @@ public class PortfolioService {
 	private PortfolioSecurityEntity portfolioSecurityModelToEntityMapper(Security s) 
 	{
 		PortfolioSecurityEntity portfolioSecurityEntity = new PortfolioSecurityEntity();
-		portfolioSecurityEntity.setId(s.getId());
+		portfolioSecurityEntity.setSecurityId(s.getId());
 		portfolioSecurityEntity.setSector(s.getSector());;
 		portfolioSecurityEntity.setSecurityName(s.getSecurityName());;
 		portfolioSecurityEntity.setSymbol(s.getSymbol());;

@@ -12,9 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,19 +20,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="portfolio_securities")
+@Table(name="security")
 public class PortfolioSecurityEntity 
 {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer id;
+	@Column(name=  "security_id")
+	private Integer securityId;
 	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "portfolio_id", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	private PortfolioEntity portfolio;
-	
-
 	@Column(name=  "security_symbol")
 	private String  symbol;
 	
@@ -56,5 +48,39 @@ public class PortfolioSecurityEntity
 	
 	@Column(name=  "revision_user_id")
 	private Integer revisionUserId;
+
+	@JoinColumn(name = "portfolio_id")
+	@ManyToOne(targetEntity = PortfolioEntity.class, fetch = FetchType.LAZY)
+	private PortfolioEntity portfolio; 
+		
+	//Lombok's toString causes an infinite recursive one-to-many - many-to-one fetch, so overriding it
+	@Override
+	public String toString()
+	{
+		return "PortfolioSecurityEntity [ "
+					+ " securityId = "         + securityId
+				    + ", symbol = "            + symbol
+				    + ", securityName = "      + securityName
+				    + ", sector = "            + sector
+				    + ", creationTimestamp = " + creationTimestamp
+				    + ", creationUserId = "    + creationUserId
+				    + ", revisionTimestamp = " + revisionTimestamp
+				    + ", revisionUserId = "    + revisionUserId
+				    + " ]";
+	}
+	
+	//Lombok's equals and hashCode are also likely to cause issues, so overriding them too
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PortfolioEntity )) return false;
+        return securityId != null && securityId.equals(((PortfolioSecurityEntity) o).securityId);
+    }
+    
+    @Override
+    public int hashCode() {
+        return 8;
+    }
+
 
 }

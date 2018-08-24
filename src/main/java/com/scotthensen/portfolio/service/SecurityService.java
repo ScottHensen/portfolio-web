@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.scotthensen.portfolio.model.Security;
 import com.scotthensen.portfolio.persistence.enterprise.entity.SecurityEntity;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@Transactional("enterpriseTransactionManager")
 public class SecurityService 
 {
 	@Autowired
@@ -25,9 +27,6 @@ public class SecurityService
 		//Optional<SecurityEntity> securityEntity = Optional.ofNullable(securityRepo.findSecurityBySymbol(symbol));
 		SecurityEntity securityEntity = securityRepo.findSecurityBySymbol(request.getSymbol());
 		
-//		if (securityEntity.isPresent()) {
-//			return securityEntityToModelMapper(securityEntity.get());			
-//		}
 		if (securityEntity != null) {
 			return SecurityServiceResponse
 						.builder()
