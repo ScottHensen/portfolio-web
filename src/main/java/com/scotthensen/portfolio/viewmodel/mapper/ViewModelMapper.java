@@ -46,13 +46,6 @@ public class ViewModelMapper {
 									AddSymbolForm form,
 									MyPortfoliosViewModel originalViewModel) //client id instead?
 	{
-	Portfolio modifiedPortfolio = 
-			portfolios
-				.stream()
-				.filter(p -> p.getId().equals(form.getPortfolioId()))
-				.findAny()
-				.orElse(null);
-
 	viewModel.setTitle("Portfolios");
 	viewModel.setMessage("My Portfolios");
 	viewModel.setClientId(originalViewModel.getClientId());	

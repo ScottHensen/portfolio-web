@@ -41,7 +41,7 @@ public class PortfolioService {
 
 		return portfolioEntities
 					.stream()
-					.map(p -> portfolioEntityToModelMapper(p))
+					.map(p -> mapPortfolioEntityToModel(p))
 					.peek(p -> log.debug("portfolioMapper: " + p.getName()))
 					.collect(Collectors.toList());
 	}
@@ -56,7 +56,7 @@ public class PortfolioService {
 			return PortfolioServiceResponse
 						.builder()
 						.security(response.getSecurity())
-						.securityId(response.getSecurity().getId())
+						.enterpriseSecurityId(response.getSecurity().getId())	
 						.success(true)
 						.message("Success: security ("+symbol+") was found by SecurityService.")
 						.build();
@@ -81,14 +81,10 @@ public class PortfolioService {
 		//       do I add them to bus model or give up on splitting model & entity?
 		//       PortfolioEntity portfolioEntity = portfolioModelToEntityMapper(portfolio);
 		
-		//TODO:  once I'm storing securities with wrong security id, need to add fk to enterprise security id
-		
 		PortfolioEntity portfolioEntity = portfolioRepo.getOne(portfolio.getId());
-		log.debug("portfolioEntityB="+portfolioEntity);
 
-		PortfolioSecurityEntity securityEntity = portfolioSecurityModelToEntityMapper(security);
-		log.debug("securityEntityB="+securityEntity);
-//		securityEntity.setSecurityId(securityId);
+		PortfolioSecurityEntity securityEntity = mapPortfolioSecurityModelToEntity(security);
+		securityEntity.setSecurityId(securityId);
 		securityEntity.setPortfolio(portfolioEntity);
 		//TODO:  need to get userid for clientId
 		securityEntity.setCreationUserId(1);  			
@@ -104,11 +100,11 @@ public class PortfolioService {
 	{
 		Optional<PortfolioEntity> portfolioEntity = portfolioRepo.findById(portfolioId);
 		
-		return Optional.ofNullable(portfolioEntityToModelMapper(portfolioEntity.get()));
+		return Optional.ofNullable(mapPortfolioEntityToModel(portfolioEntity.get()));
 	}
 	
 	
-	private Portfolio portfolioEntityToModelMapper(PortfolioEntity p) 
+	private Portfolio mapPortfolioEntityToModel(PortfolioEntity p) 
 	{
 		return Portfolio
 					.builder()
@@ -118,13 +114,13 @@ public class PortfolioService {
 					.avatarId(p.getAvatarId())
 					.securities(p.getSecurities()
 									.stream()
-									.map(s -> portfolioSecurityEntityToModelMapper(s))
+									.map(s -> mapPortfolioSecurityEntityToModel(s))
 									.peek(s -> log.debug("securityMapper: " + s.getSymbol()))
 									.collect(Collectors.toList()))
 					.build();
 	}
 	
-	private PortfolioEntity portfolioModelToEntityMapper(Portfolio p) 
+	private PortfolioEntity mapPortfolioModelToEntity(Portfolio p) 
 	{
 		PortfolioEntity portfolioEntity = new PortfolioEntity();
 		portfolioEntity.setPortfolioId(p.getId());
@@ -133,12 +129,12 @@ public class PortfolioService {
 		portfolioEntity.setName(p.getName());
 		portfolioEntity.setSecurities(p.getSecurities()
 										.stream()
-										.map(s -> portfolioSecurityModelToEntityMapper(s))
+										.map(s -> mapPortfolioSecurityModelToEntity(s))
 										.collect(Collectors.toList()));
 		return portfolioEntity;
 	}
 
-	private Security portfolioSecurityEntityToModelMapper(PortfolioSecurityEntity s) 
+	private Security mapPortfolioSecurityEntityToModel(PortfolioSecurityEntity s) 
 	{
 		return Security
 					.builder()
@@ -149,10 +145,9 @@ public class PortfolioService {
 					.build();
 	}
 
-	private PortfolioSecurityEntity portfolioSecurityModelToEntityMapper(Security s) 
+	private PortfolioSecurityEntity mapPortfolioSecurityModelToEntity(Security s) 
 	{
 		PortfolioSecurityEntity portfolioSecurityEntity = new PortfolioSecurityEntity();
-	//	portfolioSecurityEntity.setSecurityId(s.getId());
 		portfolioSecurityEntity.setSector(s.getSector());;
 		portfolioSecurityEntity.setSecurityName(s.getSecurityName());;
 		portfolioSecurityEntity.setSymbol(s.getSymbol());;

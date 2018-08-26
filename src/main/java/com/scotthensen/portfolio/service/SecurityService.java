@@ -1,7 +1,5 @@
 package com.scotthensen.portfolio.service;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,9 +8,6 @@ import com.scotthensen.portfolio.model.Security;
 import com.scotthensen.portfolio.persistence.enterprise.entity.SecurityEntity;
 import com.scotthensen.portfolio.persistence.enterprise.repository.SecurityRepository;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Service
 @Transactional("enterpriseTransactionManager")
 public class SecurityService 

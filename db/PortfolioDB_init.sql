@@ -40,6 +40,7 @@ values
 );
 INSERT into portfolio.security 
 (	 portfolio_id
+	,security_id
 	,security_symbol
     ,security_name
     ,sector_name
@@ -50,6 +51,7 @@ INSERT into portfolio.security
 ) 
 values 
 (	 1
+	,1
 	,'SAM'
     ,'Boston Beer Company Inc. (The)'
     ,'Consumer Defensive'
@@ -60,6 +62,7 @@ values
 );
 INSERT into portfolio.security 
 (	 portfolio_id
+	,security_id
 	,security_symbol
     ,security_name
     ,sector_name
@@ -70,6 +73,7 @@ INSERT into portfolio.security
 ) 
 values 
 (	 1
+	,2
 	,'TSLA'
     ,'Tesla Inc.'
     ,'Consumer Cyclical'
@@ -80,6 +84,7 @@ values
 );
 INSERT into portfolio.security 
 (	 portfolio_id
+	,security_id
 	,security_symbol
     ,security_name
     ,sector_name
@@ -90,6 +95,7 @@ INSERT into portfolio.security
 ) 
 values 
 (	 2
+	,1
 	,'SAM'
     ,'Boston Beer Company Inc. (The)'
     ,'Consumer Defensive'
@@ -100,6 +106,7 @@ values
 );
 INSERT into portfolio.security 
 (	 portfolio_id
+	,security_id
 	,security_symbol
     ,security_name
     ,sector_name
@@ -110,6 +117,7 @@ INSERT into portfolio.security
 ) 
 values 
 (	 2
+	,3
 	,'PVTL'
     ,'Pivotal Software Inc. Class A'
     ,'Technology'

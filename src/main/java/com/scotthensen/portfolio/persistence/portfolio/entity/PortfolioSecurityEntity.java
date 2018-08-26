@@ -2,7 +2,6 @@ package com.scotthensen.portfolio.persistence.portfolio.entity;
 
 import java.sql.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,6 +25,9 @@ public class PortfolioSecurityEntity
 {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name=  "id")
+	private Integer id;
+	
 	@Column(name=  "security_id")
 	private Integer securityId;
 	
@@ -59,7 +61,8 @@ public class PortfolioSecurityEntity
 	public String toString()
 	{
 		return "PortfolioSecurityEntity [ "
-					+ " securityId = "         + securityId
+					+ " id = "        		   + id
+					+ ", securityId = "        + securityId
 				    + ", symbol = "            + symbol
 				    + ", securityName = "      + securityName
 				    + ", sector = "            + sector
@@ -75,7 +78,7 @@ public class PortfolioSecurityEntity
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PortfolioEntity )) return false;
-        return securityId != null && securityId.equals(((PortfolioSecurityEntity) o).securityId);
+        return id != null && id.equals(((PortfolioSecurityEntity) o).id);
     }
     
     @Override

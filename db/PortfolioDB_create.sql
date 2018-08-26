@@ -25,10 +25,12 @@ CREATE TABLE `portfolio`.`portfolio` (
   COMMENT='Portfolios held or tracked by clients	'
   ;
 CREATE TABLE `portfolio`.`security` (
-  `security_id`      int(11)     NOT NULL AUTO_INCREMENT 
+  `id`      		 int(11)     NOT NULL AUTO_INCREMENT 
                                  COMMENT 'Unique ID (internal) for this portfolio security',
   `portfolio_id`     int(11)     NOT NULL  
                                  COMMENT 'Unique ID (internal) for a portfolio',
+  `security_id`      int(11)     NOT NULL  
+                                 COMMENT 'Unique ID (internal) for an enterprise security',
   `security_symbol`  varchar(9)  NOT NULL 
                                  COMMENT 'The symbol used to trade the security on the market',
   `security_name`    varchar(45) DEFAULT NULL 
@@ -43,7 +45,7 @@ CREATE TABLE `portfolio`.`security` (
                                  COMMENT 'Timestamp applied each time this row is revised',
   `revision_user_id` int(11)     DEFAULT  NULL 
                                  COMMENT 'Unique ID (internal) for the user who created this row',
-  PRIMARY KEY (`security_id`),
+  PRIMARY KEY (`id`),
 --  FOREIGN KEY (`portfolio_id`) 
 --  REFERENCES   `portfolio`.`portfolio` (`portfolio_id`)
 --  UNIQUE INDEX   `ix_portfolio_symbol` (`portfolio_id` ASC, `security_symbol` ASC),

@@ -67,14 +67,14 @@ public class PortfolioController
 
 		if (portfolio.isPresent()) 
 		{
-			PortfolioServiceResponse portfolioSvcResponse = 		// and this
+			PortfolioServiceResponse portfolioSvcResponse = 		
 				portfolioSvc.getSecurity(viewModel.getAddSymbolForm().getSymbol());
 			
 			if (portfolioSvcResponse.isSuccess()) 
 			{
 				portfolioSvc.addSecurityToPortfolio(portfolio.get(), 
 													portfolioSvcResponse.getSecurity(), 
-													portfolioSvcResponse.getSecurityId());				
+													portfolioSvcResponse.getEnterpriseSecurityId());				
 			}
 			else {
 				log.error(portfolioSvcResponse.getMessage());
