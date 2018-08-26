@@ -2,6 +2,7 @@ package com.scotthensen.portfolio.persistence.portfolio.entity;
 
 import java.sql.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -50,7 +51,7 @@ public class PortfolioSecurityEntity
 	private Integer revisionUserId;
 
 	@JoinColumn(name = "portfolio_id")
-	@ManyToOne(targetEntity = PortfolioEntity.class, fetch = FetchType.LAZY)
+	@ManyToOne(targetEntity = PortfolioEntity.class, fetch = FetchType.LAZY) //, cascade = CascadeType.ALL)
 	private PortfolioEntity portfolio; 
 		
 	//Lombok's toString causes an infinite recursive one-to-many - many-to-one fetch, so overriding it

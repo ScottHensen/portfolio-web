@@ -1,6 +1,5 @@
 package com.scotthensen.portfolio.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -57,6 +56,7 @@ public class PortfolioService {
 			return PortfolioServiceResponse
 						.builder()
 						.security(response.getSecurity())
+						.securityId(response.getSecurity().getId())
 						.success(true)
 						.message("Success: security ("+symbol+") was found by SecurityService.")
 						.build();
@@ -72,39 +72,33 @@ public class PortfolioService {
 		}
 	}
 
-	public void addSecurityToPortfolio(Portfolio portfolio, Security security) 
+	public void addSecurityToPortfolio(Portfolio portfolio, Security security, Integer securityId) 
 	{
-		//TODO:  I'm doing this wrong.
-		//       I need to do portfolioEntity.addSecurity, then saveandflush the PORTFOLIO.
-		//       probably need to add list<security> to portfolio entity and rework the relationship annotations
-		//       remember, these objects map relationships; they do not have to match db implementation
 		log.debug("addSecurity...portfolio=" + portfolio);
 		log.debug("addSecurity...security =" + security);
 		
-		PortfolioSecurityEntity portfolioSecurityEntity = portfolioSecurityModelToEntityMapper(security);
+		//TOOD:  the model doesn't include cre/revsn cols, so we can't map to entity; we have to select it.
+		//       do I add them to bus model or give up on splitting model & entity?
+		//       PortfolioEntity portfolioEntity = portfolioModelToEntityMapper(portfolio);
 		
-//		PortfolioEntity portfolioEntity = portfolioModelToEntityMapper(portfolio);
-//		portfolioEntity.getSecurities().add(portfolioSecurityEntity);
-//		
-//		portfolioRepo.save(portfolioEntity);
+		//TODO:  once I'm storing securities with wrong security id, need to add fk to enterprise security id
 		
+		PortfolioEntity portfolioEntity = portfolioRepo.getOne(portfolio.getId());
+		log.debug("portfolioEntityB="+portfolioEntity);
+
+		PortfolioSecurityEntity securityEntity = portfolioSecurityModelToEntityMapper(security);
+		log.debug("securityEntityB="+securityEntity);
+//		securityEntity.setSecurityId(securityId);
+		securityEntity.setPortfolio(portfolioEntity);
+		//TODO:  need to get userid for clientId
+		securityEntity.setCreationUserId(1);  			
+
+		portfolioSecurityRepo.save(securityEntity);
 		
-		
-		
-		
-		
-		
-//		portfolioRepo.saveAndFlush(portfolioEntity);
-		
-//		PortfolioEntity portfolioEntity = portfolioModelToEntityMapper(portfolio);
-//		portfolioEntity.setCreationUserId(portfolio.getClientId());
-//		
-//		PortfolioSecurityEntity portfolioSecurityEntity = portfolioSecurityModelToEntityMapper(security);
-//		portfolioSecurityEntity.setPortfolio(portfolioEntity);
-//		portfolioSecurityEntity.setCreationUserId(portfolio.getClientId());
-//		
-//		portfolioSecurityRepo.saveAndFlush(portfolioSecurityEntity);
+		log.debug("securityEntityA="+securityEntity);
+		log.debug("portfolioEntityA="+portfolioEntity);
 	}
+
 
 	public Optional<Portfolio> getPortfolio(Integer portfolioId) 
 	{
@@ -137,6 +131,10 @@ public class PortfolioService {
 		portfolioEntity.setAvatarId(p.getAvatarId());
 		portfolioEntity.setClientId(p.getClientId());
 		portfolioEntity.setName(p.getName());
+		portfolioEntity.setSecurities(p.getSecurities()
+										.stream()
+										.map(s -> portfolioSecurityModelToEntityMapper(s))
+										.collect(Collectors.toList()));
 		return portfolioEntity;
 	}
 
@@ -154,7 +152,7 @@ public class PortfolioService {
 	private PortfolioSecurityEntity portfolioSecurityModelToEntityMapper(Security s) 
 	{
 		PortfolioSecurityEntity portfolioSecurityEntity = new PortfolioSecurityEntity();
-		portfolioSecurityEntity.setSecurityId(s.getId());
+	//	portfolioSecurityEntity.setSecurityId(s.getId());
 		portfolioSecurityEntity.setSector(s.getSector());;
 		portfolioSecurityEntity.setSecurityName(s.getSecurityName());;
 		portfolioSecurityEntity.setSymbol(s.getSymbol());;

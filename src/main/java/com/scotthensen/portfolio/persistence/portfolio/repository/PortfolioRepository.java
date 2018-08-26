@@ -13,10 +13,15 @@ import com.scotthensen.portfolio.persistence.portfolio.entity.PortfolioEntity;
 @Repository
 public interface PortfolioRepository extends JpaRepository<PortfolioEntity, Integer> 
 {
-	List<PortfolioEntity> findPortfoliosByPortfolioId(Integer portfolioId);
+	PortfolioEntity findPortfolioByPortfolioId(Integer portfolioId);
+	
+	Set<PortfolioEntity> findPortfoliosByPortfolioId(Integer portfolioId);
 	
 	List<PortfolioEntity> findByClientId(Integer clientId);
 
 	@Query("select p from PortfolioEntity p left join p.securities s where p.clientId = :clientId")
 	Set<PortfolioEntity> getFooByClientId(@Param("clientId") Integer clientId);
+	
+	@Query("select p from PortfolioEntity p join fetch p.securities s where p.portfolioId = :portfolioId")
+	Set<PortfolioEntity> getFooByPortfolioId(@Param("portfolioId") Integer portfolioId);
 }

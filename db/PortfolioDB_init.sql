@@ -118,3 +118,23 @@ values
 	,null
 	,null
 );
+-- INSERT into portfolio.security 
+-- (	 portfolio_id
+-- 	,security_symbol
+--  ,security_name
+--  ,sector_name
+-- 	,creation_ts
+-- 	,creation_user_id
+-- 	,revision_ts
+-- 	,revision_user_id
+-- ) 
+-- values 
+-- (	 2
+-- 	,'TSLA'
+--  ,'Tesla Inc.'
+--  ,'Consumer Cyclical'
+-- 	,current_timestamp
+-- 	,1
+-- 	,null
+-- 	,null
+-- );

@@ -21,6 +21,7 @@ public class PortfolioServiceResponse
 {
 	private List<Portfolio> portfolios;
 	private List<Security>  securities;
+	private Integer   securityId;
 	private Security  security;
 	private Portfolio portfolio;
 	private Boolean   success;

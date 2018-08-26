@@ -29,7 +29,7 @@ public class ViewModelMapper {
 	{
 	viewModel.setTitle("Portfolios");
 	viewModel.setMessage("My Portfolios");
-	viewModel.setClientId(1);	//TODO: fix this
+	viewModel.setClientId(portfolios.get(0).getClientId());
 	viewModel.setAddSymbolForm(new AddSymbolForm());
 	viewModel.setTableHeaders(buildPortfolioHeaders());
 	viewModel.setPortfolios(mapPortfoliosToPortfolioViewModelList(

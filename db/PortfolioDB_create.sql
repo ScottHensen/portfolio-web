@@ -41,12 +41,12 @@ CREATE TABLE `portfolio`.`security` (
                                  COMMENT 'Unique ID (internal) for the user who created this row',
   `revision_ts`      timestamp    
                                  COMMENT 'Timestamp applied each time this row is revised',
-  `revision_user_id` int(11)      
+  `revision_user_id` int(11)     DEFAULT  NULL 
                                  COMMENT 'Unique ID (internal) for the user who created this row',
   PRIMARY KEY (`security_id`),
 --  FOREIGN KEY (`portfolio_id`) 
 --  REFERENCES   `portfolio`.`portfolio` (`portfolio_id`)
---  UNIQUE INDEX `ix_portfolio_symbol` (`portfolio_id` ASC, `security_symbol` ASC),
+--  UNIQUE INDEX   `ix_portfolio_symbol` (`portfolio_id` ASC, `security_symbol` ASC),
   CONSTRAINT     `fk_portfolio_id` 
     FOREIGN KEY (`portfolio_id`) 
     REFERENCES   `portfolio`.`portfolio` (`portfolio_id`) 

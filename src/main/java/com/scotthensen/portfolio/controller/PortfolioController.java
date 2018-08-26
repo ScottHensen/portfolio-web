@@ -38,12 +38,12 @@ public class PortfolioController
 	@GetMapping("/portfolios/{clientId}")
 	public String showPortfoliosForClientId(Model model, @PathVariable String clientId) 
 	{
-		List<Portfolio> portfolios = portfolioSvc.getClientPortfolios(new Integer(clientId));
-		log.debug("portfolios=" + portfolios);
+		List<Portfolio> portfolios = 
+				portfolioSvc.getClientPortfolios(new Integer(clientId));
 		
-		MyPortfoliosViewModel viewModel = new MyPortfoliosViewModel();
-		viewModel = viewModelMapper.buildMyPortfoliosViewModel(viewModel, portfolios, new AddSymbolForm());
-		
+		MyPortfoliosViewModel viewModel = 
+				viewModelMapper.buildMyPortfoliosViewModel(new MyPortfoliosViewModel(), portfolios, new AddSymbolForm());
+
 		model.addAttribute("originalViewModel", viewModel);
 		log.debug("model="+model);
 		return "myportfolios";
@@ -72,7 +72,9 @@ public class PortfolioController
 			
 			if (portfolioSvcResponse.isSuccess()) 
 			{
-				portfolioSvc.addSecurityToPortfolio(portfolio.get(), portfolioSvcResponse.getSecurity());				
+				portfolioSvc.addSecurityToPortfolio(portfolio.get(), 
+													portfolioSvcResponse.getSecurity(), 
+													portfolioSvcResponse.getSecurityId());				
 			}
 			else {
 				log.error(portfolioSvcResponse.getMessage());
