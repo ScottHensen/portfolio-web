@@ -12,66 +12,98 @@
 	          content="Scott Hensen">
 	          
 		<title th:text="${originalViewModel.title}">Der Title</title>
-		
+
 		<link rel="icon" 
-			  th:href="@{/favicon.ico}" />
+			  th:href="@{/favicon.ico}" />		
+		<link rel="stylesheet" 
+			  th:href="@{/css/bootstrap.min.css}" />
 		<link rel="stylesheet" 
 			  th:href="@{/css/myportfolios.css}">
 	</head>
 	
 	<body>
-		<p th:text="${originalViewModel.message}" />
-		<div th:each="portfolio,portfolioStat : ${originalViewModel.portfolios}">
-		<br />
-		<p th:text="${portfolio.portfolioName}" />
-		<table class="table table-striped table-sm">
-			<thead>
-				<tr>
-					<th th:each="header : ${originalViewModel.tableHeaders}" 
-						th:text="${header}"></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
- 				<div id="addSymbolForm" 
- 					th:with="messageStyle=${originalViewModel.portfolios[__${portfolioStat.index}__].addSymbolForm.messageStyle}
- 					        ,inSymbol=${originalViewModel.portfolios[__${portfolioStat.index}__].addSymbolForm.symbol}">
- 					
-					<form id="addSymbolForm" action='#' 					
-									 		 th:action="@{/portfolios/{clientId}(clientId=${originalViewModel.clientId})}"
- 											 th:object="${originalViewModel}"
-									 		 method="post">
-
-						<input type="submit" value="+" />
-						
-						<input class="input" th:attrappend="class=${'-' + symbolStyle}"
-								type="text"  th:name="addSymbolForm.symbol"      
-										     th:field="*{addSymbolForm.symbol}"
-										     th:placeholder="${inSymbol}"
-										     
-										     />
- 
-						<label class="label" th:attrappend="class=${'-' + messageStyle}"
-											 th:text="*{portfolios[__${portfolioStat.index}__].addSymbolForm.message}?: ' ' " ></label>
-
-						<input type="hidden" name="addSymbolForm.portfolioId"
-											 th:value="${portfolio.portfolioId}" />
-
-<!-- left off here -->	<input type="hidden" th:name="*{portfolios[__${portfolioStat.index}__].portfolioId}"
-											 th:value="${portfolio.portfolioId}" />
+		<div class="container">
+			<h1 th:text="${originalViewModel.message}"></h1>
+			<div th:each="portfolio,portfolioStat : ${originalViewModel.portfolios}">
+				<br />
+				<h3 th:text="${portfolio.portfolioName}"></h3>
+				<table class="table table-striped table-sm">
+					<thead>
+						<tr>
+							<!-- th th:each="header : ${originalViewModel.tableHeaders}" 
+								th:text="${header}"></th -->
+							<th scope="col"></th>
+							<th scope="col">Symbol</th>
+							<th scope="col">Bid</th>
+							<th scope="col">Ask</th>
+							<th scope="col">Shares</th>
+							<th scope="col">Value</th>
+						</tr>
+					</thead>
+					<tbody>
+		 				<tr th:each="security : ${portfolio.securities}">
+		 					<th scope="row"></th>
+							<td><div>
+								<form class="form-inline">
+									<div><input  type="text" 
+											readonly 
+											class="form-control-plaintext"
+											id="delSym"
+											th:value="${security.symbol}"></div>
+									<div><button type="submit" 
+											class="btn btn-outline-danger btn-sm">-</button></div>
+								</form>
+									
+								</div>
+							</td>
+							<td th:text="${security.bid}"        ></td>
+							<td th:text="${security.ask}"        ></td>
+							<td th:text="${security.shareQty}"   ></td>
+							<td th:text="${security.shareValue}" ></td>
+						</tr>
+		 			</tbody>
+		    	</table>
+	
+				<div id="addSymbolForm" 
+	 				 th:with="messageStyle=${originalViewModel.portfolios[__${portfolioStat.index}__].addSymbolForm.messageStyle}
+	 				         ,inSymbol=${originalViewModel.portfolios[__${portfolioStat.index}__].addSymbolForm.symbol}">
+	 					
+					 <form id="addSymbolForm" action='#' 					
+									 		  th:action="@{/portfolios/{clientId}(clientId=${originalViewModel.clientId})}"
+	 										  th:object="${originalViewModel}"
+									 		  method="post">
+						<div class="form-row">
+							<div class="col">
+							    <input type="text"  class="input" 
+												 	th:attrappend="class=${'-' + symbolStyle}"
+												 	th:name="addSymbolForm.symbol"      
+											    	th:field="*{addSymbolForm.symbol}"
+											    	th:placeholder="${inSymbol}"
+											    	 /></div>
+	 
+							<div class="col"><button type="submit" class="btn btn-outline-success btn-sm">+</button></div>
+							
+							<div class="col-6" colspan="4"><label class="label" 
+												 th:attrappend="class=${'-' + messageStyle}"
+												 th:text="*{portfolios[__${portfolioStat.index}__].addSymbolForm.message}?: ' ' " ></label></div>
+	
+							<input type="hidden" name="addSymbolForm.portfolioId"
+												 th:value="${portfolio.portfolioId}" />
+	
+							<input type="hidden" th:name="*{portfolios[__${portfolioStat.index}__].portfolioId}"
+												 th:value="${portfolio.portfolioId}" />
+						</div>
 					</form>
 				</div>
-				</tr>
-				<tr th:each="security : ${portfolio.securities}">
-					<th th:text="${security.deleteInd}"  ></th>
-					<th th:text="${security.symbol}"     ></th>
-					<th th:text="${security.bid}"        ></th>
-					<th th:text="${security.ask}"        ></th>
-					<th th:text="${security.shareQty}"   ></th>
-					<th th:text="${security.shareValue}" ></th>
-				</tr>
-			</tbody>
-		</table>
+			</div>
 		</div>
+	<!--------------------------------------------------
+	  Bootstrap core Javascript
+	  (Placed at the end of page, so it'll load faster)
+	 --------------------------------------------------->	
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-slim.min.js"><\/script>')</script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+		
 	</body>
 </html>
