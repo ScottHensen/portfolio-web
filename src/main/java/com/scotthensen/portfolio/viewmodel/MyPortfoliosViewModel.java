@@ -19,7 +19,7 @@ public class MyPortfoliosViewModel
 	private String         title;
 	private String         message;
 	private Integer        clientId;
-	private List<String>   tableHeaders;
+	//private List<String>   tableHeaders;
 	private List<PortfolioViewModel> portfolios;
-	private AddSymbolForm  addSymbolForm;   
+	private AddSymbolForm  addSymbolForm;
 }

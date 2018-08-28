@@ -7,17 +7,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.scotthensen.portfolio.model.DeleteSymbolRequest;
 import com.scotthensen.portfolio.model.Portfolio;
 import com.scotthensen.portfolio.persistence.portfolio.repository.PortfolioRepository;
 import com.scotthensen.portfolio.service.PortfolioService;
 import com.scotthensen.portfolio.service.PortfolioServiceResponse;
 import com.scotthensen.portfolio.viewmodel.MyPortfoliosViewModel;
 import com.scotthensen.portfolio.viewmodel.form.AddSymbolForm;
+import com.scotthensen.portfolio.viewmodel.form.DelSymbolForm;
 import com.scotthensen.portfolio.viewmodel.mapper.ViewModelMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +40,8 @@ public class PortfolioController
 	@Autowired 
 	ViewModelMapper viewModelMapper;
 	
-	@GetMapping("/portfolios/{clientId}")
-	public String showPortfoliosForClientId(Model model, @PathVariable String clientId) 
+	@GetMapping("/clients/{clientId}")
+	public String getPortfoliosForClientId(Model model, @PathVariable String clientId) 
 	{
 		List<Portfolio> portfolios = 
 				portfolioSvc.getClientPortfolios(new Integer(clientId));
@@ -49,12 +54,11 @@ public class PortfolioController
 		return "myportfolios";
 	}
 	
-	@PostMapping("/portfolios/{clientId}")
-	public String handleMyPortfoliosForClientFormSubmit(
-														@PathVariable String clientId,
-														@ModelAttribute MyPortfoliosViewModel originalViewModel,
-														BindingResult errors,
-														Model model)
+	@PostMapping("/clients/{clientId}")
+	public String addSymbolToClientsPortfolio(	@PathVariable String clientId,
+												@ModelAttribute MyPortfoliosViewModel originalViewModel,
+												BindingResult errors,
+												Model model)
 	{
 		log.debug("  model=" + model.toString());
 		log.debug("ogmodel=" + originalViewModel.toString());
@@ -96,6 +100,14 @@ public class PortfolioController
 		log.debug("updated viewModel=" + viewModel);
 
 		return "myportfolios";
+	}
+
+	@PostMapping("/deleteSymbolFromPortfolio")
+	@ResponseBody
+	public String delSymbolFromClientsPortfolio(@RequestBody DeleteSymbolRequest request)
+	{
+		log.debug(request.toString());
+		return "{\"response\":\"yeah!\"}";
 	}
 
 }

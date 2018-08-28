@@ -30,32 +30,23 @@
 				<table class="table table-striped table-sm">
 					<thead>
 						<tr>
-							<!-- th th:each="header : ${originalViewModel.tableHeaders}" 
-								th:text="${header}"></th -->
-							<th scope="col"></th>
 							<th scope="col">Symbol</th>
-							<th scope="col">Bid</th>
-							<th scope="col">Ask</th>
+							<th scope="col">Bid   </th>
+							<th scope="col">Ask   </th>
 							<th scope="col">Shares</th>
-							<th scope="col">Value</th>
+							<th scope="col">Value </th>
 						</tr>
 					</thead>
 					<tbody>
+						<!-- the params seem kinda janky; can I add k/v pairs -->
 		 				<tr th:each="security : ${portfolio.securities}">
-		 					<th scope="row"></th>
-							<td><div>
-								<form class="form-inline">
-									<div><input  type="text" 
-											readonly 
-											class="form-control-plaintext"
-											id="delSym"
-											th:value="${security.symbol}"></div>
-									<div><button type="submit" 
-											class="btn btn-outline-danger btn-sm">-</button></div>
-								</form>
-									
-								</div>
-							</td>
+							<td th:text="${security.symbol}"     ></td>
+							<td><input type="button" 
+									   class="btn btn-outline-danger btn-sm deleteSymbolButton" 
+									   value="-" 
+									   th:param="${clientId + ',' + 
+									   			   portfolio.portfolioId + ',' + 
+									   			   security.symbol}" /></td>
 							<td th:text="${security.bid}"        ></td>
 							<td th:text="${security.ask}"        ></td>
 							<td th:text="${security.shareQty}"   ></td>
@@ -64,17 +55,18 @@
 		 			</tbody>
 		    	</table>
 	
-				<div id="addSymbolForm" 
+				<div id="addSymbolDiv" 
 	 				 th:with="messageStyle=${originalViewModel.portfolios[__${portfolioStat.index}__].addSymbolForm.messageStyle}
 	 				         ,inSymbol=${originalViewModel.portfolios[__${portfolioStat.index}__].addSymbolForm.symbol}">
 	 					
 					 <form id="addSymbolForm" action='#' 					
-									 		  th:action="@{/portfolios/{clientId}(clientId=${originalViewModel.clientId})}"
+									 		  th:action="@{/clients/{clientId}(clientId=${originalViewModel.clientId})}"
 	 										  th:object="${originalViewModel}"
 									 		  method="post">
 						<div class="form-row">
 							<div class="col">
 							    <input type="text"  class="input" 
+							    					size="9"
 												 	th:attrappend="class=${'-' + symbolStyle}"
 												 	th:name="addSymbolForm.symbol"      
 											    	th:field="*{addSymbolForm.symbol}"
@@ -97,13 +89,15 @@
 				</div>
 			</div>
 		</div>
+		
 	<!--------------------------------------------------
-	  Bootstrap core Javascript
+	  Javascript 
 	  (Placed at the end of page, so it'll load faster)
 	 --------------------------------------------------->	
 	<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
     <script>window.jQuery || document.write('<script src="js/jquery-slim.min.js"><\/script>')</script>
     <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/myportfolios.js}"></script>
 		
 	</body>
 </html>

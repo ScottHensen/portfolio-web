@@ -31,7 +31,7 @@ public class ViewModelMapper {
 	viewModel.setMessage("My Portfolios");
 	viewModel.setClientId(portfolios.get(0).getClientId());
 	viewModel.setAddSymbolForm(new AddSymbolForm());
-	viewModel.setTableHeaders(buildPortfolioHeaders());
+	//viewModel.setTableHeaders(buildPortfolioHeaders());
 	viewModel.setPortfolios(mapPortfoliosToPortfolioViewModelList(
 				viewModel.getPortfolios(), 
 				portfolios,
@@ -50,7 +50,7 @@ public class ViewModelMapper {
 	viewModel.setMessage("My Portfolios");
 	viewModel.setClientId(originalViewModel.getClientId());	
 	viewModel.setAddSymbolForm(new AddSymbolForm());  //make this default
-	viewModel.setTableHeaders(buildPortfolioHeaders());
+	//viewModel.setTableHeaders(buildPortfolioHeaders());
 	viewModel.setPortfolios(mapPortfoliosToPortfolioViewModelList(
 				viewModel.getPortfolios(), 
 				portfolios,
@@ -152,7 +152,7 @@ public class ViewModelMapper {
 	{
 		SecurityViewModel securityViewModel = new SecurityViewModel();
 		
-		securityViewModel.setDeleteInd("-");
+		//securityViewModel.setDeleteInd("-");
 		securityViewModel.setSymbol(security.getSymbol());
 		securityViewModel.setName(security.getSecurityName());
 		securityViewModel.setNameVisibleInd("N");
