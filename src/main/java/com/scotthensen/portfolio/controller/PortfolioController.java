@@ -104,9 +104,18 @@ public class PortfolioController
 
 	@PostMapping("/deleteSymbolFromPortfolio")
 	@ResponseBody
-	public String delSymbolFromClientsPortfolio(@RequestBody DeleteSymbolRequest request)
+	public String delSymbolFromClientsPortfolio(@RequestBody DeleteSymbolRequest request, Model model)
 	{
 		log.debug(request.toString());
+		
+		//TODO:  this validation is lame
+		if ( request == null  ||  request.getPortfolioId() == null  ||  request.getSymbol().isEmpty() ) 
+		{
+			return "{\"response\":\"Error Will Robinson!\"}";
+		}
+		
+		portfolioSvc.delSecurityInPortfolio(request.getPortfolioId(), request.getSymbol());
+		
 		return "{\"response\":\"yeah!\"}";
 	}
 

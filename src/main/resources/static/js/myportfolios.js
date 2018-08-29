@@ -4,13 +4,20 @@ $(document).ready(function() {
 	
 	//events
 	$(document).on('click', '.deleteSymbolButton', function() {
-		var $this = $(this)
+		var $this  = $(this)
 		var params = $this.attr("param").split(",")
+		var clientId    = params[0]
+		var portfolioId = params[1]
+		var symbol      = params[2]
+		
 		if (params) {
-			var postParams = {"clientId":params[0],"portfolioId":params[1],"symbol":params[2]}
+			var postParams = {
+							  "clientId"   : clientId,
+							  "portfolioId": portfolioId,
+							  "symbol"     : symbol      
+							  }
 		}
 		
-		//TODO: clean this up; replace it with $.post?
 		$.ajax({
 			 type:		"POST"
 			,url:		"/deleteSymbolFromPortfolio"
@@ -20,10 +27,13 @@ $(document).ready(function() {
 						}
 			,data:		JSON.stringify(postParams)
 			,cache:		false
-			,success:	function(data) {
-							alert("yeah!")
+			,success:	function(json) {
+							if(!json.error) {	
+								location.replace("/clients/" + clientId)
+							}
+							console.log("json error!")
 						}
-			,error:		function(data) {
+			,error:		function(json) {
 							alert("boo!")
 						}
 		})

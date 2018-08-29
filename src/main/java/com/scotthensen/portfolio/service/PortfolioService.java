@@ -95,7 +95,6 @@ public class PortfolioService {
 		log.debug("portfolioEntityA="+portfolioEntity);
 	}
 
-
 	public Optional<Portfolio> getPortfolio(Integer portfolioId) 
 	{
 		Optional<PortfolioEntity> portfolioEntity = portfolioRepo.findById(portfolioId);
@@ -103,6 +102,12 @@ public class PortfolioService {
 		return Optional.ofNullable(mapPortfolioEntityToModel(portfolioEntity.get()));
 	}
 	
+	public void delSecurityInPortfolio(Integer portfolioId, String symbol)
+	{
+		PortfolioEntity portfolio = portfolioRepo.findPortfolioByPortfolioId(portfolioId);
+		
+		portfolioSecurityRepo.deleteBySymbol(portfolio, symbol);
+	}
 	
 	private Portfolio mapPortfolioEntityToModel(PortfolioEntity p) 
 	{
