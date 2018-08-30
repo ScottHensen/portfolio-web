@@ -20,8 +20,13 @@ public interface PortfolioRepository extends JpaRepository<PortfolioEntity, Inte
 	List<PortfolioEntity> findByClientId(Integer clientId);
 
 	@Query("select p from PortfolioEntity p left join p.securities s where p.clientId = :clientId")
-	Set<PortfolioEntity> getFooByClientId(@Param("clientId") Integer clientId);
+	Set<PortfolioEntity> getPortfoliosByClientId(@Param("clientId") Integer clientId);
 	
 	@Query("select p from PortfolioEntity p join fetch p.securities s where p.portfolioId = :portfolioId")
-	Set<PortfolioEntity> getFooByPortfolioId(@Param("portfolioId") Integer portfolioId);
+	Set<PortfolioEntity> getPortfoliosByPortfolioId(@Param("portfolioId") Integer portfolioId);
+
+//	@Modifying
+//	@Query("update PortfolioEntity p set p.securities = :securities where p.portfolioId = :portfolioId")
+//	void addSecurity(@Param("portfolioId") Integer portfolioId, 
+//				     @Param("securities")  List<PortfolioSecurityEntity> securities);
 }

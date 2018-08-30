@@ -8,9 +8,9 @@ import lombok.Data;
 @Component
 @Data
 @AllArgsConstructor
-public class DelSymbolForm 
+public class DelSymbolFormxxx 
 {
-	public DelSymbolForm() {
+	public DelSymbolFormxxx() {
 		this.message      = "";
 		this.messageStyle = "default";
 		this.hasError     = false;

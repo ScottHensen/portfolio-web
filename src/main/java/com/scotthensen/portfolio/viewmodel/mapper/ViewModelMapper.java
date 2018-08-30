@@ -1,6 +1,5 @@
 package com.scotthensen.portfolio.viewmodel.mapper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +30,6 @@ public class ViewModelMapper {
 	viewModel.setMessage("My Portfolios");
 	viewModel.setClientId(portfolios.get(0).getClientId());
 	viewModel.setAddSymbolForm(new AddSymbolForm());
-	//viewModel.setTableHeaders(buildPortfolioHeaders());
 	viewModel.setPortfolios(mapPortfoliosToPortfolioViewModelList(
 				viewModel.getPortfolios(), 
 				portfolios,
@@ -50,27 +48,12 @@ public class ViewModelMapper {
 	viewModel.setMessage("My Portfolios");
 	viewModel.setClientId(originalViewModel.getClientId());	
 	viewModel.setAddSymbolForm(new AddSymbolForm());  //make this default
-	//viewModel.setTableHeaders(buildPortfolioHeaders());
 	viewModel.setPortfolios(mapPortfoliosToPortfolioViewModelList(
 				viewModel.getPortfolios(), 
 				portfolios,
 				form));
 	
 	return viewModel;
-	}
-
-	private List<String> buildPortfolioHeaders() 
-	{
-		List<String> hdrs = new ArrayList<>();
-		
-		hdrs.add("");
-		hdrs.add("Symbol");
-		hdrs.add("Bid");
-		hdrs.add("Ask");
-		hdrs.add("Shares");
-		hdrs.add("Value");
-		
-		return hdrs;
 	}
 
 	private List<PortfolioViewModel> mapPortfoliosToPortfolioViewModelList(
@@ -121,7 +104,7 @@ public class ViewModelMapper {
 		
 		portfolioViewModel.setPortfolioId(p.getId());
 		portfolioViewModel.setPortfolioName(p.getName());
-//left off here... null pointer on initial load
+
 		if (p.getId().equals(mp.getId())) {
 			portfolioViewModel.setAddSymbolForm(form);
 		}
@@ -152,7 +135,6 @@ public class ViewModelMapper {
 	{
 		SecurityViewModel securityViewModel = new SecurityViewModel();
 		
-		//securityViewModel.setDeleteInd("-");
 		securityViewModel.setSymbol(security.getSymbol());
 		securityViewModel.setName(security.getSecurityName());
 		securityViewModel.setNameVisibleInd("N");

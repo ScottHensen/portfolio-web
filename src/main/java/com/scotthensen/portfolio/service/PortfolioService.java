@@ -35,7 +35,7 @@ public class PortfolioService {
 	public List<Portfolio> getClientPortfolios(Integer clientId)
 	{
 		Set<PortfolioEntity> portfolioEntities = 
-				portfolioRepo.getFooByClientId(clientId);
+				portfolioRepo.getPortfoliosByClientId(clientId);
 
 		log.debug("portfolioEntites=" + portfolioEntities);
 
@@ -79,8 +79,9 @@ public class PortfolioService {
 		
 		//TOOD:  the model doesn't include cre/revsn cols, so we can't map to entity; we have to select it.
 		//       do I add them to bus model or give up on splitting model & entity?
-		//       PortfolioEntity portfolioEntity = portfolioModelToEntityMapper(portfolio);
-		
+		//       PortfolioEntity portfolioEntity = mapPortfolioModelToEntity(portfolio);
+		       
+		//This works, but I don't want to have to do the extra select
 		PortfolioEntity portfolioEntity = portfolioRepo.getOne(portfolio.getId());
 
 		PortfolioSecurityEntity securityEntity = mapPortfolioSecurityModelToEntity(security);
@@ -125,19 +126,19 @@ public class PortfolioService {
 					.build();
 	}
 	
-	private PortfolioEntity mapPortfolioModelToEntity(Portfolio p) 
-	{
-		PortfolioEntity portfolioEntity = new PortfolioEntity();
-		portfolioEntity.setPortfolioId(p.getId());
-		portfolioEntity.setAvatarId(p.getAvatarId());
-		portfolioEntity.setClientId(p.getClientId());
-		portfolioEntity.setName(p.getName());
-		portfolioEntity.setSecurities(p.getSecurities()
-										.stream()
-										.map(s -> mapPortfolioSecurityModelToEntity(s))
-										.collect(Collectors.toList()));
-		return portfolioEntity;
-	}
+//	private PortfolioEntity mapPortfolioModelToEntity(Portfolio p) 
+//	{
+//		PortfolioEntity portfolioEntity = new PortfolioEntity();
+//		portfolioEntity.setPortfolioId(p.getId());
+//		portfolioEntity.setAvatarId(p.getAvatarId());
+//		portfolioEntity.setClientId(p.getClientId());
+//		portfolioEntity.setName(p.getName());
+//		portfolioEntity.setSecurities(p.getSecurities()
+//										.stream()
+//										.map(s -> mapPortfolioSecurityModelToEntity(s))
+//										.collect(Collectors.toList()));
+//		return portfolioEntity;
+//	}
 
 	private Security mapPortfolioSecurityEntityToModel(PortfolioSecurityEntity s) 
 	{
